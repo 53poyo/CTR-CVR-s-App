@@ -11,12 +11,15 @@ import math
 import pickle
 import sklearn
 import pandas
+import sys
 
 
 
 #モデルに入力される画像サイズを指定
 image_size_h = 157
 image_size_w = 300
+
+filepaths = []
 
 
 #アップロードされた画像を保存するフォルダ名
@@ -64,7 +67,7 @@ def upload_file():
             return redirect(request.url)
 
 #[]送信されたデータを取得　名前を入れてないと送信しない
-        filepaths = []
+
         for file in files:
         #file = request.files['file']
          if file.filename == '':
@@ -86,11 +89,11 @@ def upload_file():
     #image.load_imgでロードとリサイズ
     imgs = []
     for filepath in filepaths:
-     img = image.load_img(filepath, grayscale=False,
+        img = image.load_img(filepath, grayscale=False,
                             target_size=(image_size_h, image_size_w))
 
     #image.img_to_arrayで読み込んだ画像をNumpy配列に変換する →imgsのリストに追加する
-    imgs.append(image.img_to_array(img))
+        imgs.append(image.img_to_array(img))
     #model.predict()にはNumpy配列のリストを渡す必要があるので格納する#複数予測したい時は、data = np.array([img,img...])
     #imgsのリストに格納されているimgをnp.arrayに変換する　 np.array([img,img...])の形にする
     data = np.array(imgs)
@@ -98,13 +101,13 @@ def upload_file():
 
 #配信媒体と配信面の処理2（ラベル付）
     baitailabele = request.form.get('baitai')
-    print(baitailabele)
-
-    ichi = request.form.get('ichi')
-    print(ichi)
+    ichilabel = request.form.get('ichi')
+    #print(type(baitailabele),file=sys.stderr)
 #htmlからの取得データは文字列のためint型に変換
-    ichi = int(ichi)
-    baitailabele = int(baitailabele)
+    print(baitailabele)
+    print(type(baitailabele))
+    int(baitailabele)
+    int(ichilabel)
 
 
 #配信媒体、配信面１×１の形、　画像：枚数（ひとつの画像だから１）×高さ×横×RGB　をリストにまとめる　モデルの順番に合わせる
@@ -152,11 +155,11 @@ def upload_file():
 
 
 #__name__ == '__main__'がTrueである、すなわちこのコードが直接実行されたときのみapp.run()が実行され、Flaskアプリが起動
-if __name__ == "__main__":
-    port = int(os.environ.get('PORT', 8080))
-    app.run(debug = True,host ='0.0.0.0',port = port)
+#if __name__ == "__main__":
+    #port = int(os.environ.get('PORT', 8080))
+    #app.run(debug = True,host ='0.0.0.0',port = port)
 
 
 #練習用
-#if __name__ == "__main__":
-    #app.run(debug = True, port = 5500)
+if __name__ == "__main__":
+    app.run(debug = True, port = 5000)
