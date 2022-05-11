@@ -12,6 +12,7 @@ import pickle
 import sklearn
 import pandas
 import sys
+import tensorflow as tf
 
 
 
@@ -94,7 +95,7 @@ def upload_file():
         imgs.append(image.img_to_array(img))
         #model.predict()にはNumpy配列のリストを渡す必要があるので格納する#複数予測したい時は、data = np.array([img,img...])
         #imgsのリストに格納されているimgをnp.arrayに変換する　 np.array([img,img...])の形にする
-        img = np.array(imgs)
+        imgs = np.array(imgs)
 
 
         #配信媒体と配信面の処理2（ラベル付）
@@ -103,8 +104,8 @@ def upload_file():
         #print(type(baitailabele),file=sys.stderr)
         #htmlからの取得データは文字列のためint型に変換
 
-        int(baitailabele)
-        int(ichilabel)
+        baitailabele = int(baitailabele)
+        ichilabel = int(ichilabel)
 
 
         #配信媒体、配信面１×１の形、　画像：枚数（ひとつの画像だから１）×高さ×横×RGB　をリストにまとめる　モデルの順番に合わせる
@@ -115,19 +116,26 @@ def upload_file():
         ichi = []
         for _ in range(len(imgs)):
             baitai.append([baitailabele])
-            ichi.append([ichi])
+            ichi.append([ichilabel])
 
         baitai = np.array(baitai)
         ichi = np.array(ichi)
 
-         #CTR ,CVRラベルを整数に戻す モデルの順番に合わせる　x1 =配信媒体　x2 =配信面　x3 = 画像　の順番に渡す。axis=1で横にリストを輪とめる
-        ctr_label =[]
-        cvr_label =[]
-        for i in range(len(imgs)):
-            ctr_label.append(np.argmax(modelCTR.predict([baitai[i], ichi[i], img[i]]), axis=1))
-            cvr_label.append(np.argmax(modelCVR.predict([baitai[i], ichi[i], img[i]]), axis=1))
-        #ctr_label = np.argmax(modelCTR.predict([baitai, ichi, img]), axis=1)
-        #cvr_label = np.argmax(modelCVR.predict([baitai, ichi, img]), axis=1)
+        
+        
+        ctr_label = np.argmax(modelCTR.predict([baitai, ichi, imgs]))
+        cvr_label = np.argmax(modelCVR.predict([baitai, ichi, imgs]))
+        
+        #print(ctr_label)
+        #baitai = tf.data.Dataset.from_tensor_slices(baitai)
+        #ichi = tf.data.Dataset.from_tensor_slices(ichi)
+        #img = tf.data.Dataset.from_tensor_slices(img)
+        #data = tf.data.Dataset.zip((baitai, ichi, img))
+ 
+        #data1 = data.as_numpy_iterator()
+        #CTR ,CVRラベルを整数に戻す モデルの順番に合わせる　x1 =配信媒体　x2 =配信面　x3 = 画像　の順番に渡す。axis=1で横にリストを輪とめる
+        #ctr_label = modelCTR.predict(data1) # エラーが出るなら、predict_on_batchにする
+        #cvr_label = modelCVR.predict(data1)
 
 
 
@@ -137,8 +145,8 @@ def upload_file():
             le2 = pickle.load(f2)
 
         # ↑開けたラベルピッケルの0, 1...の整数値を[0.1, 0.2]のような範囲に逆変換する
-        ctrla = le1.inverse_transform(ctr_label)
-        cvrla = le2.inverse_transform(cvr_label)
+        ctrla = le1.inverse_transform([ctr_label])
+        cvrla = le2.inverse_transform([cvr_label])
 
         #範囲の場合、pandasのレフト、ライトで取り出す。ctrlα、cvrlaの範囲を取り出している。 ctr[1]にしたら２つ目の値が出てくるのでフォーマットを分けて書く
         answer = ""
