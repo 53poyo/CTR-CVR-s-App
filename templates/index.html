@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Number Classifier</title>
+  <link rel="stylesheet" href="../static/stylesheet.css">
+</head>
+
+<body>
+  <header>
+    <img class="header_img" img src="../static/ロゴ画像.png"  alt="Aidemy">
+    <a class="header-logo" href="https://note.com/53poyo/n/nc5133944a48a" target="_blank" rel="noopener noreferrer"> CTR,CVRの予測アプリ</a>
+  </header>
+
+  <div class="main">
+      <h2> <span class="class1">AI</span>が送信された画像の
+      <br><span class="class2">CTR,CVR</span>を予測します。
+      <br>
+      <br><p1>画像/配信面媒体/配信位置を選択し、送信してください</p1>
+      </h2>
+
+
+   <form method="POST" enctype="multipart/form-data">
+      <p4>
+        画像：
+      <input class="file_choose" type="file" name="file">
+      </p4>
+
+      <p>
+        配信媒体：
+        <select name="baitai">
+          <option value="1" selected=“selected”>Facebook</option>
+          <option value="2">Google</option>
+          <option value="0">Eight</option>
+          <option value="3">その他</option>
+        </select>
+      </p>
+     
+      <p>
+        配信位置：
+        <select name="ichi">
+          <option value="2" selected=“selected”>メイン</option>
+          <option value="3">上部</option>
+          <option value="4">会社</option>
+          <option value="5">名刺</option>
+          <option value="0">PC</option>
+          <option value="1">その他</option>
+        </select>
+      </p>
+      <br><input class="btn" value="送信" type="submit">
+   </form>
+
+   <div class="box2">
+    <p>「CTR」,「CVR」の予測は、<span class="answer1">{{answer}}</span> です。</p>
+   </div>
+   <div class="box3">
+    <p>100,000impあたりの「クリック数」,「CV数」の予測は、<span class="answer1">{{answer2}}</span> です。</p>
+   </div>
+
+   <div class = "chui">
+      <p3><a href="https://ja.wikipedia.org/wiki/CTR" target="_blank" rel="noopener noreferrer">「CTR」</a>= クリック率/
+          <a href="https://en.wikipedia.org/wiki/CVR" target="_blank" rel="noopener noreferrer">「CVR」</a>= コンバージョン率</p3>
+      <br>
+      <p2>※学習データはダミーデータとなります。</p2>
+      <br>
+      <p2>※本アプリはテストアプリとなりますため、本アプリを利用する、またはそれが原因で発生した損失や損害について、当方では一切責任を負いかねます。</p2>
+   </div>
+  </div>
+
+  <footer>
+    <small>&copy; 53poyo, inc.</small>
+    <img class="footer_img" src="../static/ロゴ画像.png"
+      alt="Aidemy">
+  </footer>
+</body>
+  
+</html>
